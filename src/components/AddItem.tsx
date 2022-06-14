@@ -1,93 +1,143 @@
-import React,{useState} from 'react'
+import {
+  Button,
+  Container,
+  TextareaAutosize,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
+import React, { useState } from "react";
 import { IState as Props } from "../App";
-
+import PersonIcon from "@mui/icons-material/Person";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
 interface IProps {
-    setItems: React.Dispatch<React.SetStateAction<Props["items"]>>
-    items: Props["items"]
+  setItems: React.Dispatch<React.SetStateAction<Props["items"]>>;
+  items: Props["items"];
 }
 
-const AddItem: React.FC<IProps> = ({setItems, items}) => {
+const AddItem: React.FC<IProps> = ({ setItems, items }) => {
+  const [input, setInput] = useState({
+    name: "",
+    price: "",
+    description: "",
+    img: "",
+  });
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setInput({
+      ...input,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    const [input, setInput] = useState({
-        name: "",
-        price: "",
-        description: "",
-        img: ""
-    }) 
+  const handleClick = () => {
+    if (!input.name || !input.price) return;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setInput({
-            ...input,
-            [e.target.name]: e.target.value
-        })
-    }
+    setItems([
+      ...items,
+      {
+        name: input.name,
+        price: parseInt(input.price),
+        url: input.img,
+        description: input.description,
+      },
+    ]);
 
-    const handleClick = () => {
-        if(!input.name || !input.price) return
-
-        setItems([
-            ...items,
-            {
-                name: input.name,
-                price: parseInt(input.price),
-                url: input.img,
-                description: input.description
-            }
-        ]);
-
-        setInput({
-            name: "",
-            price: "",
-            img: "",
-            description: ""
-        })
-    }
-
+    setInput({
+      name: "",
+      price: "",
+      img: "",
+      description: "",
+    });
+  };
 
   return (
-    <div className="AddItem">
-            <input 
-                type="text"
-                onChange={handleChange}
-                className="AddItemInput"
-                name="name"
-                value={input.name}
-                placeholder="Name"
-            />
-            <input 
-                type="text"
-                onChange={handleChange}
-                className="AddItemInput"
-                name="price"
-                value={input.price}
-                placeholder="Price"
-            />
-            <input 
-                type="text"
-                onChange={handleChange}
-                className="AddItemInput"
-                name="img"
-                value={input.img}
-                placeholder="Image Url"
-            />
-            <textarea
-                onChange={handleChange}
-                className="AddItemInput"
-                name="description"
-                value={input.description}
-                placeholder="Note"
-            />
-            <button
-                onClick={handleClick}
-                className="AddItemButton"
-            >
-                Add to List
-            </button>
-        </div>
-    
-  )
-}
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        width: "30rem",
+        margin: "5rem auto",
+      }}
+    >
+      <TextField
+        variant="outlined"
+        type="text"
+        onChange={handleChange}
+        sx={{
+          padding: "0.5 rem",
+          fontSize: "1rem",
+          margin: " 0.3rem 0rem;",
+        }}
+        name="name"
+        value={input.name}
+        label="Name"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <PersonIcon />
+            </InputAdornment>
+          ),
+        }}
+      />
+      <TextField
+        variant="outlined"
+        type="text"
+        onChange={handleChange}
+        sx={{ padding: "0.5 rem", fontSize: "1rem", margin: " 0.3rem 0rem;" }}
+        name="price"
+        value={input.price}
+        label="Price"
+        InputProps={{
+          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+        }}
+      />
+      <TextField
+        variant="outlined"
+        type="text"
+        onChange={handleChange}
+        sx={{ padding: "0.5 rem", fontSize: "1rem", margin: " 0.3rem 0rem;" }}
+        name="img"
+        value={input.img}
+        label="Image Url"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <AddPhotoAlternateIcon />
+            </InputAdornment>
+          ),
+        }}
+      />
+      <TextareaAutosize
+        minRows={5}
+        onChange={handleChange}
+        style={{ marginTop: 1 }}
+        name="description"
+        value={input.description}
+        placeholder="Description"
+      />
+      <Button
+        variant="contained"
+        onClick={handleClick}
+        sx={{
+          padding: "0.5rem",
+          cursor: "pointer",
+          backgroundColor: "#f7dc6f",
+          fontWeight: 700,
+          color: "black",
+          border: "none",
+          "&:hover": {
+            backgroundColor: "#f7dc6f",
+          },
+          marginTop: 1,
+        }}
+      >
+        Add to List
+      </Button>
+    </Container>
+  );
+};
 
-export default AddItem
+export default AddItem;
