@@ -1,3 +1,7 @@
+# Items to Buy App
+This is a simple app that can list all your items to buy with the form that placed below.
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
