@@ -7,6 +7,17 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import {
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+} from "@mui/material";
+import TablePagination from "@mui/material/TablePagination";
+import "./table.css";
 
 interface IProps {
   items: {
@@ -18,7 +29,85 @@ interface IProps {
 }
 
 const ItemList: React.FC<IProps> = ({ items }) => {
-  const renderItemList = (): JSX.Element[] => {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const handleChangePage = (event: any, newPage: any) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const renderItemTable = (): JSX.Element => {
+    return (
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Picture</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Price</TableCell>
+              <TableCell>Description</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {items
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => (
+                <TableRow
+                  key={row.name}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell>
+                    {
+                      <Avatar
+                        sx={{
+                          width: "4rem",
+                          height: "4rem",
+                          marginRight: "20px",
+                        }}
+                        src={row.url}
+                      />
+                    }
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="h5">{row.name}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="h6">${row.price}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      variant="body2"
+                      sx={{ width: "70%", textAlign: "left" }}
+                    >
+                      {row.description}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={items.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </TableContainer>
+    );
+  };
+
+  //THIS METHOD RENDERING THE ITEMS WITH LIST
+  /* const renderItemList = (): JSX.Element[] => {
     return items.map((item) => {
       return (
         <Box
@@ -57,9 +146,9 @@ const ItemList: React.FC<IProps> = ({ items }) => {
         </Box>
       );
     });
-  };
+  };    */
 
-  return <List sx={{ marginTop: 2 }}>{renderItemList()}</List>;
+  return <Container sx={{ marginTop: 2 }}>{renderItemTable()}</Container>;
 };
 
 export default ItemList;
